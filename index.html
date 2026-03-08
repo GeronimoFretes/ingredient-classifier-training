@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Clasificador de Ingredientes</title>
+  <title>Ingredient Classifier</title>
   <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
   <style>
     body {
@@ -62,16 +62,16 @@
 </head>
 <body>
 
-  <h1>Demo - Clasificador de Ingredientes</h1>
+  <h1>Demo - Ingredient Classifier</h1>
 
   <video id="webcam" width="300" height="225" autoplay muted playsinline></video>
   <canvas id="hidden" width="224" height="224" style="display:none"></canvas>
 
-  <div id="pred">Cargando modelo…</div>
+  <div id="pred">Loading model...</div>
   <div id="status"></div>
 
-  <a class="github-link" href="https://github.com/geronimofretes/clasificador_de_ingredientes" target="_blank">
-    🔗 Ver repositorio en GitHub
+  <a class="github-link" href="https://github.com/geronimofretes/ingredient-classifier-training" target="_blank">
+    🔗 GitHub repository
   </a>
 
 <script>
@@ -80,7 +80,7 @@
   const INPUT_NAME = 'input';
   const MEAN = [0.485, 0.456, 0.406];
   const STD = [0.229, 0.224, 0.225];
-  const CLASS_NAMES = ['azúcar','banana','harina','huevo','huevo','leche','manteca'];
+  const CLASS_NAMES = ['sugar','banana','flour','eggs','eggs','milk','butter'];
 
   function preprocess(imgData) {
     const { data, width, height } = imgData;
@@ -104,14 +104,14 @@
     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
     video.srcObject = stream;
   } catch (err) {
-    document.getElementById('pred').textContent = '⚠️ No se pudo acceder a la cámara.';
+    document.getElementById('pred').textContent = '⚠️ Camera access denied.';
     console.error(err);
     return;
   }
 
   const session = await ort.InferenceSession.create(MODEL_PATH, { executionProviders: ['wasm'] });
 
-  document.getElementById('pred').textContent = 'Modelo cargado – analizando…';
+  document.getElementById('pred').textContent = 'Model loaded – analyzing...';
 
   const canvas = document.getElementById('hidden');
   const ctx = canvas.getContext('2d');
